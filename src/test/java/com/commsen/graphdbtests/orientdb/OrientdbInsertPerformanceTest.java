@@ -30,9 +30,9 @@ public class OrientdbInsertPerformanceTest extends BaseGraphInsertPerformanceTes
 	protected OrientEdge createEdge(Vertex v1, Vertex v2, final OrientBaseGraph db) {
 
 		OrientEdge e = db.addEdge(null, v1, v2, "E");
-		for (int i = 0; i < numberOfProperties; i++) {
+		/*for (int i = 0; i < numberOfProperties; i++) {
 			e.setProperty("property" + i, "value" + i);
-		}
+		}*/
 		return e;
 	}
 
@@ -72,11 +72,11 @@ public class OrientdbInsertPerformanceTest extends BaseGraphInsertPerformanceTes
 
  		OrientVertex v1=null, v2=null;
 
-		OrientBaseGraph db=null;
+		OrientBaseGraph db;
 
         db = OrientDbUtil.getDatabase();
 		try {
-			db.getRawGraph().declareIntent(new OIntentMassiveInsert());
+			//db.getRawGraph().declareIntent(new OIntentMassiveInsert());
 
 			switch (modelType) {
 
@@ -105,6 +105,7 @@ public class OrientdbInsertPerformanceTest extends BaseGraphInsertPerformanceTes
 			for (int i = 0; i < v; i++) {
 
 				if (i % TIMEOUT_CHECK == 0 && System.currentTimeMillis() - startTime > TIMEOUT) {
+                    db.commit();
 					return new TestResult(i, 0, true);
 				}
 
@@ -120,6 +121,7 @@ public class OrientdbInsertPerformanceTest extends BaseGraphInsertPerformanceTes
 			for (int i = 0; i < e; i++) {
 
 				if (i % TIMEOUT_CHECK == 0 && System.currentTimeMillis() - startTime > TIMEOUT) {
+                    db.commit();
 					return new TestResult(v, i, true);
 				}
 
@@ -128,14 +130,14 @@ public class OrientdbInsertPerformanceTest extends BaseGraphInsertPerformanceTes
                 edge.save();
 			}
 
-			db.getRawGraph().declareIntent(null);
-
+			//db.getRawGraph().declareIntent(null);
+            db.commit();
 		}catch(Exception ex){
             ex.printStackTrace();
         }
 		finally {
 			db.getRawGraph().close();
-            db.commit();
+
 		}
 		
 		return new TestResult(db.countVertices(), e/*db.countEdges()*/, false);

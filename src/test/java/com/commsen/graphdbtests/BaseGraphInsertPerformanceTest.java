@@ -44,7 +44,7 @@ public abstract class BaseGraphInsertPerformanceTest extends BaseGraphPerformanc
 	}
 
 	protected static long[] executionDocumentsAmounts = new long[] {
-		/*10000,*/ 50000, 100000, 1000000
+		1000, 5000, 10000, 50000, 100000, 500000, 1000000
 	};
 
 	protected static long[] executionPropertiesAmounts = new long[] {
@@ -52,7 +52,7 @@ public abstract class BaseGraphInsertPerformanceTest extends BaseGraphPerformanc
 	};
 
     protected static int[] executionThreadsNumber = new int[] {
-		2
+		1, 2, 4
     };
 
 	protected static long TIMEOUT = 60 * 1000*10; //10min
