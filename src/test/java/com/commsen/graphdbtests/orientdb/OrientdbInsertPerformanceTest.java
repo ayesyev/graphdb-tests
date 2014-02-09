@@ -2,6 +2,8 @@
 package com.commsen.graphdbtests.orientdb;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.*;
@@ -9,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.commsen.graphdbtests.BaseGraphInsertPerformanceTest;
-import com.orientechnologies.orient.core.intent.OIntentMassiveInsert;
+//import com.orientechnologies.orient.core.intent.OIntentMassiveInsert;
 
 public class OrientdbInsertPerformanceTest extends BaseGraphInsertPerformanceTest {
 
@@ -19,31 +21,31 @@ public class OrientdbInsertPerformanceTest extends BaseGraphInsertPerformanceTes
 
 
 	protected OrientVertex createVertex(final OrientBaseGraph db) {
-        OrientVertex vertex = db.addVertex("OGraphVertex", null);
+        Map<String, String> properties = new HashMap<String, String>();
+        for (int i = 0; i < numberOfProperties; i++)
+            properties.put("property" + i, "value" + i);
+        OrientVertex vertex = db.addVertex(null, properties);
+/*
         for (int i = 0; i < numberOfProperties; i++) {
             vertex.setProperty("property" + i, "value" + i);
 		}
+*/
         vertex.save();
         return vertex;
 	}
 
 	protected OrientEdge createEdge(Vertex v1, Vertex v2, final OrientBaseGraph db) {
+        Map<String, String> properties = new HashMap<String, String>();
+        for (int i = 0; i < numberOfProperties; i++)
+            properties.put("property" + i, "value" + i);
+        OrientEdge e = ((OrientVertex)v1).addEdge(null, (OrientVertex)v2, "E", null, properties);// db.addEdge(null, v1, v2, "E", properties);
+        e.save();
 
-		OrientEdge e = db.addEdge(null, v1, v2, "E");
 		/*for (int i = 0; i < numberOfProperties; i++) {
 			e.setProperty("property" + i, "value" + i);
 		}*/
 		return e;
 	}
-
-	/*protected ODocument createEdge(ORID id1, ORID id2, final OGraphDatabase db) {
-
-		ODocument doc = db.createEdge(id1, id2);
-		for (int i = 0; i < numberOfProperties; i++) {
-			doc.field("property" + i, "value" + i);
-		}
-		return doc;
-	}*/
 
     @BeforeClass
     public static void redirectOutput(){
@@ -57,8 +59,7 @@ public class OrientdbInsertPerformanceTest extends BaseGraphInsertPerformanceTes
     }
 
 	@Before
-	public void clearData()
-		throws IOException {
+	public void clearData() throws IOException {
 
 		OrientDbUtil.dropDB();
 		OrientDbUtil.createDB();
@@ -126,8 +127,6 @@ public class OrientdbInsertPerformanceTest extends BaseGraphInsertPerformanceTes
 				}
 
 				OrientEdge edge = createEdge(v1, v2, db);
-
-                edge.save();
 			}
 
 			//db.getRawGraph().declareIntent(null);

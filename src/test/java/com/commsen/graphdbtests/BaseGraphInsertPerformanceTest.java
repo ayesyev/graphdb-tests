@@ -4,6 +4,7 @@ package com.commsen.graphdbtests;
 import java.util.*;
 import java.util.concurrent.*;
 
+import com.carrotsearch.randomizedtesting.annotations.Timeout;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -44,7 +45,7 @@ public abstract class BaseGraphInsertPerformanceTest extends BaseGraphPerformanc
 	}
 
 	protected static long[] executionDocumentsAmounts = new long[] {
-		1000, 5000, 10000, 50000, 100000, 500000, 1000000
+		1000, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000
 	};
 
 	protected static long[] executionPropertiesAmounts = new long[] {
@@ -68,6 +69,8 @@ public abstract class BaseGraphInsertPerformanceTest extends BaseGraphPerformanc
     protected int numberOfThreads;
 
 	protected long startTime;
+
+    //protected int commitStep = ;
 
 	@Parameters
 	public static Collection<Object[]> getParameters() {
